@@ -2,5 +2,12 @@
 module.exports = {
 
 	// View DOM elements
-	elNav: '#nav'
+	elNav: '#nav',
+	elConvert: '#convert',
+
+	// API
+	api: {
+		convertToNumeral: 'api/convertToNumeral/',
+		convertToNumber: 'api/convertToNumber/'
+	}
 };
