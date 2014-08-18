@@ -6592,6 +6592,25 @@ body {
     margin-left: -80px;
   }
 }
+/* Search Container */
+#convert .form-box {
+  margin-top: 90px;
+}
+#convert .form-box .submit {
+  margin-top: 10px;
+}
+#convert .errors {
+  color: #fff;
+  left: 5%;
+  position: absolute;
+  top: 9px;
+  width: 91%;
+  text-align: center;
+}
+#convert .result {
+  margin-top: 10px;
+  font-weight: bold;
+}
 /* ==========================================================================
    Animations
    ========================================================================== */
