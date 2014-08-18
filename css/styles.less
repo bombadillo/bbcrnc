@@ -1,0 +1,227 @@
+/* ==========================================================================
+   Gradients
+   ========================================================================== */
+
+
+
+/* ==========================================================================
+   Custom Styles
+   ========================================================================== */
+
+body {
+    padding-top: 50px;
+    padding-bottom: 20px;
+    
+} 
+ 
+/* Helper Styles */
+
+.ghost {
+    visibility: hidden; 
+}
+
+
+/* ==========================================================================
+   Responsive Styles
+   ========================================================================== */
+
+@media screen and (min-width:768px){
+	.navbar-brand-centered {
+		display: block;
+		left: 46%;
+		position: absolute;
+		text-align: center;
+		width: 261px;
+	}
+    .navbar>.container .navbar-brand-centered, 
+    .navbar>.container-fluid .navbar-brand-centered {
+        margin-left: -80px;
+    }
+}
+
+
+/* ==========================================================================
+   Animations
+   ========================================================================== */
+
+
+/* Slide Up */
+.slideUp {
+	animation-name: slideUp;
+	-webkit-animation-name: slideUp;	
+
+	animation-duration: 1s;	
+	-webkit-animation-duration: 1s;
+
+	animation-timing-function: ease;	
+	-webkit-animation-timing-function: ease;
+
+	visibility: visible !important;		
+	-webkit-transform: translateY(-40%);	
+	transform: translateY(-40%);
+}
+
+@keyframes slideUp {
+	0% {
+		transform: translateY(0%);
+	}		
+	100% {
+		transform: translateY(-40%);
+	}	
+}
+
+@-webkit-keyframes slideUp {
+	0% {
+		-webkit-transform: translateY(0%);
+	}		
+	100% {
+		-webkit-transform: translateY(-40%);
+	}	
+}
+
+
+/* Default animation */
+.animated {
+  -webkit-animation-duration: 1s;
+  animation-duration: 1s;
+  -webkit-animation-fill-mode: both;
+  animation-fill-mode: both;
+}
+
+
+/* Fade in up */
+.fadeInUp {
+  -webkit-animation-name: fadeInUp;
+  animation-name: fadeInUp;
+}
+@-webkit-keyframes fadeInUp {
+  0% {
+    opacity: 0;
+    -webkit-transform: translateY(20px);
+    transform: translateY(20px);
+  }
+
+  100% {
+    opacity: 1;
+    -webkit-transform: translateY(0);
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeInUp {
+  0% {
+    opacity: 0;
+    -webkit-transform: translateY(20px);
+    -ms-transform: translateY(20px);
+    transform: translateY(20px);
+  }
+
+  100% {
+    opacity: 1;
+    -webkit-transform: translateY(0);
+    -ms-transform: translateY(0);
+    transform: translateY(0);
+  }
+}
+
+/* Fade in up */
+.fadeOutDown {
+  -webkit-animation-name: fadeOutDown;
+  animation-name: fadeOutDown;
+}
+@-webkit-keyframes fadeOutDown {
+  0% {
+    opacity: 1;
+    -webkit-transform: translateY(0);
+    transform: translateY(0);
+  }
+
+  100% {
+    opacity: 0;
+    -webkit-transform: translateY(20px);
+    transform: translateY(20px);
+  }
+}
+
+@keyframes fadeOutDown {
+  0% {
+    opacity: 1;
+    -webkit-transform: translateY(0);
+    -ms-transform: translateY(0);
+    transform: translateY(0);
+  }
+
+  100% {
+    opacity: 0;
+    -webkit-transform: translateY(20px);
+    -ms-transform: translateY(20px);
+    transform: translateY(20px);
+  }
+}
+
+
+
+/*
+==============================================
+fadeIn
+==============================================
+*/
+
+.fadeIn{
+  animation-name: fadeIn;
+  -webkit-animation-name: fadeIn; 
+
+  animation-duration: 1.5s; 
+  -webkit-animation-duration: 1.5s;
+
+  animation-timing-function: ease-in-out; 
+  -webkit-animation-timing-function: ease-in-out;   
+
+  visibility: visible !important; 
+}
+
+@keyframes fadeIn {
+  0% {
+    transform: scale(0);
+    opacity: 0.0;   
+  }
+  60% {
+    transform: scale(1.1);  
+  }
+  80% {
+    transform: scale(0.9);
+    opacity: 1; 
+  } 
+  100% {
+    transform: scale(1);
+    opacity: 1; 
+  }   
+}
+
+@-webkit-keyframes fadeIn {
+  0% {
+    -webkit-transform: scale(0);
+    opacity: 0.0;   
+  }
+  60% {
+    -webkit-transform: scale(1.1);
+  }
+  80% {
+    -webkit-transform: scale(0.9);
+    opacity: 1; 
+  } 
+  100% {
+    -webkit-transform: scale(1);
+    opacity: 1; 
+  }   
+}
+
+
+
+/* ==========================================================================
+   Override Bootstrap
+   ========================================================================== */
+
+.img-thumbnail {
+  background-color: #FFFFFF;
+}

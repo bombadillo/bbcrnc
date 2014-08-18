@@ -1,0 +1,4 @@
+js/app.bundle.js
+js/app.bundle.min.js
+js/app.bundle.test.js
+js/templates/*.tmpl 

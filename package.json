@@ -1,0 +1,36 @@
+{
+  "name": "gruntModular",
+  "author": "Chris Mumford <mumfordnsons@gmail.com>",
+  "version": "0.1.0",
+  "devDependencies": {
+    "grunt": "~0.4.5",
+    "grunt-contrib-jshint": "~0.10.0",
+    "grunt-contrib-uglify": "~0.5.0",
+    "jshint-stylish": "~0.4.0",
+    "grunt-contrib-cssmin": "~0.10.0",
+    "grunt-contrib-less": "~0.11.3",
+    "grunt-contrib-watch": "~0.6.1",
+    "grunt-browserify": "~2.1.3",
+    "jstify": "~0.2.0",
+    "grunt-contrib-copy": "~0.5.0",
+    "grunt-remove": "~0.1.0",
+    "grunt-contrib-clean": "~0.5.0"
+  },
+  "dependencies": {
+    "jquery": "1.11.1",
+    "underscore": "",
+    "backbone": "",
+    "bootstrap": "3.2.0"
+  },
+  "scripts": {
+    "install": "grunt copy && grunt clean",
+    "test": "grunt prod"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/bombadillo/gruntModular"
+  },
+  "bugs": {
+    "url": "https://github.com/bombadillo/gruntModular/issues"
+  }
+}
