@@ -2137,7 +2137,7 @@ var router = new Router();
 // Call function to start the Backbone history functionality
 Backbone.history.start();
 
-},{"./_vendor/bootstrap":1,"./common/eventChannel":3,"./common/router":5,"./common/utilities":6,"backbone":10,"jquery":11}],3:[function(require,module,exports){
+},{"./_vendor/bootstrap":1,"./common/eventChannel":3,"./common/router":5,"./common/utilities":6,"backbone":12,"jquery":13}],3:[function(require,module,exports){
 /* Require modules */
 var $        = require('jquery'),
     Backbone = require('backbone'),
@@ -2148,12 +2148,19 @@ Backbone.$ = $;
 
 // Set the result of the underscore extend function as the module exports
 module.exports = _.extend({}, Backbone.Events); 
-},{"backbone":10,"jquery":11,"underscore":12}],4:[function(require,module,exports){
+},{"backbone":12,"jquery":13,"underscore":14}],4:[function(require,module,exports){
 // Set the object as the module exports
 module.exports = {
 
 	// View DOM elements
-	elNav: '#nav'
+	elNav: '#nav',
+	elConvert: '#convert',
+
+	// API
+	api: {
+		convertToNumeral: 'api/convertToNumeral/',
+		convertToNumber: 'api/convertToNumber/'
+	}
 };
 },{}],5:[function(require,module,exports){
 /* Require modules */
@@ -2178,14 +2185,16 @@ module.exports = Backbone.Router.extend({
     	utils.log('Home', 'routeChange');
 
         // Require views.
-        var NavView    = require('../views/nav');
+        var NavView     = require('../views/nav'),
+            ConvertView = require('../views/convert');
 
         // Create instances of views if they don't exist.
-        this.navView = this.navView || new NavView({ el: $(globals.elNav) });        	
+        this.navView     = this.navView || new NavView({ el: $(globals.elNav) });        
+        this.ConvertView = this.ConvertView || new ConvertView({ el: $(globals.elConvert) });	
     }
 
 }); 
-},{"../common/globals":4,"../common/utilities":6,"../views/nav":9,"backbone":10,"jquery":11}],6:[function(require,module,exports){
+},{"../common/globals":4,"../common/utilities":6,"../views/convert":10,"../views/nav":11,"backbone":12,"jquery":13}],6:[function(require,module,exports){
 // Set the object as the module exports
 module.exports = {
 
@@ -2336,16 +2345,185 @@ module.exports = {
     BasicModel: BasicModel,
     BasicCollection: BasicCollection
 };
-},{"backbone":10,"jquery":11,"underscore":12}],8:[function(require,module,exports){
+},{"backbone":12,"jquery":13,"underscore":14}],8:[function(require,module,exports){
 var _ = require('underscore');
 module.exports = function(obj){
 var __t,__p='',__j=Array.prototype.join,print=function(){__p+=__j.call(arguments,'');};
 with(obj||{}){
-__p+='<div class="container"><div class="navbar-header"><button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar-brand-centered"><span class="sr-only">Toggle navigation</span> <span class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span></button><div class="navbar-brand navbar-brand-centered">Vehicle Image Search</div></div><div class="navbar-collapse collapse"></div></div>';
+__p+='<div class="convert-container col-xs-6 col-xs-offset-3"><div class="errors"></div><div class="form-box row"><div class="col-xs-12"><h5 class="text-center"><span class="glyphicon glyphicon-info-sign text-info"></span><em>Enter the value you want to convert to/from roman numerals</em></h5><form action="" method=""><input name="ref" type="text" placeholder="Eg: MMMCMXCIX or 3999" class="form-control" autocomplete="off"><button class="btn btn-info btn-block submit" type="submit">Convert</button></form></div></div><div class="row"><div class="col-xs-5 col-xs-offset-3 text-center"><div class="result alert ghost"></div></div></div></div>';
 }
 return __p;
 };
-},{"underscore":12}],9:[function(require,module,exports){
+},{"underscore":14}],9:[function(require,module,exports){
+var _ = require('underscore');
+module.exports = function(obj){
+var __t,__p='',__j=Array.prototype.join,print=function(){__p+=__j.call(arguments,'');};
+with(obj||{}){
+__p+='<div class="container"><div class="navbar-header"><button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar-brand-centered"><span class="sr-only">Toggle navigation</span> <span class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span></button><div class="navbar-brand navbar-brand-centered">Roman Numerals Converter</div></div><div class="navbar-collapse collapse"></div></div>';
+}
+return __p;
+};
+},{"underscore":14}],10:[function(require,module,exports){
+/* Require modules */
+var $        = require('jquery'),
+    Backbone = require('backbone'),
+    models   = require('../models/global'),
+    template = require("../templates/convert.html"),
+    utils    = require("../common/utilities"),
+    events   = require('../common/eventChannel'),
+    globals   = require('../common/globals.js')
+    ;
+
+// Assign jQuery instance to Backbone.$
+Backbone.$ = $;
+
+// Set the view as the module export
+module.exports = Backbone.View.extend({
+
+	// Is called at instantiation
+    initialize: function () {
+
+        // Set the view's model
+        this.model = new models.BasicModel();
+
+        // Call function to render the view
+        this.render();
+    },  
+
+    // Capture events
+    events: {
+        'submit form': 'onFormSubmit'
+    },
+
+    // Populates the view's element with the new HTML
+    render: function () {     	
+        // Log status
+        utils.log("Convert", "viewRender");
+        
+    	// Populate template with data
+        this.$el.html( template() );
+
+        // Enable chaining
+        return this;
+    },
+
+    // Handles the form submission. 
+    onFormSubmit: function (e) {
+        // Prevent form from submitting
+        e.preventDefault();
+
+        // Set the models url to the numeric conversion
+        this.model.set('urlRoot', globals.api.convertToNumeral);
+
+        // Set the form element to a variable
+        var elForm = this.$el.find('form');
+
+        // Get the input value
+        var value   = elForm.find('input[name=ref]').val();
+
+        // Set bErrors to false initially. Set message and pattern variables. The pattern 
+        // will match a string that has two sets of characters with a space delimitting them
+        var bErrors = false,
+            sMessage = '',
+            rPattern = /^(M?M?M?)((CM)|(CD)|((D?)(C?C?C?)))((XC)|(XL)|((L?)(X?X?X?)))((IX)|(IV)|((V?)(I?I?I?)))$/,
+            elError = this.$el.find('.errors');
+
+        // If the value is empty
+        if (value === '') {
+            // Set to true since there's an error
+            bErrors = true;
+            // Set the message
+            sMessage = 'You have not entered anything!';
+        // Now check to see if the value is not a number
+        } else if ( isNaN(value) ) {
+            // Check to see we have two strings seperated by a space
+            if (!rPattern.test(value)) {
+                // Set to true since there's an error
+                bErrors = true;
+                // Set the message
+                sMessage = 'You have not entered a correctly formatted roman numeral';
+            }
+
+            // Since the value is a string, change the url            
+            this.model.set('urlRoot', globals.api.convertToNumber);
+        // Otherwise we have a numerical value
+        } else {
+            // Check to see if the numerical value is within range
+            if ( value < 1 || value > 3999 ) {
+                // Set to true since there's an error
+                bErrors = true;
+                // Set the message
+                sMessage = 'The value must be between 1 and 3999';                
+            }
+        }
+        // END if
+
+        // If there are any errors
+        if (bErrors) {
+            // Find the errors element and remove/add the classes to enable the styles and then set the HTML to the message string
+            elError.removeClass('fadeOutDown').addClass("alert alert-danger animated fadeInUp").html(sMessage);
+            // Prevent further execution.
+            return false;
+        } 
+        // END if errors
+
+        // Find the errors element if it has the danger class and remove/add the classes to enable the styles and clear the html.
+        if (elError.hasClass('alert-danger')) elError.removeClass('fadeInUp').addClass("alert alert-danger animated fadeOutDown");
+
+        // Call function to send data to server
+        this.getConvertedValue(value);
+    },
+
+    // Calls server to get converted value
+    getConvertedValue: function (value) {
+
+        // Set scope
+        var $this = this;
+
+        // Set the params
+        this.model.set('params', value);
+
+        // Make call to server
+        this.model.fetch({
+            success: function (model, response) {
+                // Call function to display result
+                $this.displayResult();
+            },
+            error: function (model, response) {
+
+            }
+        });
+    },
+
+    // Displays the result from the conversion API
+    displayResult: function () {
+
+        // Variable to hold string for HTML, class for element, get result element
+        var sHtml  = 'Converted result: ',
+            sClass = '',
+            elResult = this.$el.find('.result');
+
+        // Remove the error/success classes
+        elResult.removeClass('alert-danger alert-success');
+ 
+        // If the model has an error
+        if (this.model.get('errors')) {
+            // Set the HTML and class
+            sHtml = this.model.get('message');
+            sClass = 'alert-danger';
+        } else {
+            // Set the HTML and class
+            sHtml += this.model.get('convertedValue');
+            sClass = 'alert-success';
+        }
+  
+        // Set the html of the results element and display the result
+        elResult.html(sHtml).addClass(sClass + ' fadeIn');
+    }
+
+});
+
+},{"../common/eventChannel":3,"../common/globals.js":4,"../common/utilities":6,"../models/global":7,"../templates/convert.html":8,"backbone":12,"jquery":13}],11:[function(require,module,exports){
 /* Require modules */
 var $        = require('jquery'),
     Backbone = require('backbone'),
@@ -2380,7 +2558,7 @@ module.exports = Backbone.View.extend({
     },
 
 });  
-},{"../common/eventChannel":3,"../common/utilities":6,"../models/global":7,"../templates/nav.html":8,"backbone":10,"jquery":11}],10:[function(require,module,exports){
+},{"../common/eventChannel":3,"../common/utilities":6,"../models/global":7,"../templates/nav.html":9,"backbone":12,"jquery":13}],12:[function(require,module,exports){
 //     Backbone.js 1.1.2
 
 //     (c) 2010-2014 Jeremy Ashkenas, DocumentCloud and Investigative Reporters & Editors
@@ -3990,7 +4168,7 @@ module.exports = Backbone.View.extend({
 
 }));
 
-},{"underscore":12}],11:[function(require,module,exports){
+},{"underscore":14}],13:[function(require,module,exports){
 /*!
  * jQuery JavaScript Library v1.11.1
  * http://jquery.com/
@@ -14300,7 +14478,7 @@ return jQuery;
 
 }));
 
-},{}],12:[function(require,module,exports){
+},{}],14:[function(require,module,exports){
 //     Underscore.js 1.6.0
 //     http://underscorejs.org
 //     (c) 2009-2014 Jeremy Ashkenas, DocumentCloud and Investigative Reporters & Editors
