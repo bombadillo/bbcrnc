@@ -116,7 +116,7 @@ test("Fail-Check: Server conversion to numerals", 3, function () {
 	        success: function (model, response) {
 
 	        	// Check that model.get('errors') is true
-	        	ok(model.get('errors'), model.get('tests'));
+	        	ok(model.get('errors'), model.get('testMessage'));
 
 	        	// Start QUnit
 	        	start();
