@@ -28,10 +28,10 @@
 	}
 
 	// Create instance of class
-	$NumeralsConversion = new NumeralsConversion($iNumber);
+	$NumeralsConversion = new NumeralsConversion();
 
 	// Call method of class to convert number to roman numerals
-	$NumeralsConversion->convertToNumerals();
+	$NumeralsConversion->convertToNumerals($iNumber);
 
 	// Set the converted value to the array
 	$aResponse['convertedValue'] = $NumeralsConversion->convertedValue;

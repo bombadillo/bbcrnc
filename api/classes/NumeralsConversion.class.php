@@ -1,10 +1,9 @@
 <?php
 
+// Require the interface
+require_once __DIR__ . '/../interfaces/NumeralsConversion.interface.php';
 
-class NumeralsConversion {
-
-	// Holds the value that we will be converting to/from roman numerals
-	private $conversionValue;
+class NumeralsConversion implements iNumeralsConversion {
 
 	// Holds the array of possible roman numerals
 	private $aNumerals = ['M' => 1000, 'CM' => 900, 'D' => 500, 'CD' => 400, 'C' => 100, 'XC' => 90, 'L' => 50, 'XL' => 40, 'X' => 10, 'IX' => 9, 'V' => 5, 'IV' => 4, 'I' => 1];
@@ -14,19 +13,11 @@ class NumeralsConversion {
 	// Holds the converted value
 	public $convertedValue;
 
-	// Sets $conversionValue to the value passed in with class instantiation
-    function __construct($conversionValue)
-    {
-    	// Set conversionValue to the passed in argument
-        $this->conversionValue = $conversionValue;
-    } 	
-    // END __construct
-
     // Converts a number into roman numerals
-    public function convertToNumerals() {
+    public function convertToNumerals($conversionValue) {
 
     	// Holds the current value of the conversion number
-    	$iCurrentValue = $this->conversionValue;
+    	$iCurrentValue = $conversionValue;
 
     	// Set the converted value to an empty string
     	$this->convertedValue = '';
@@ -52,7 +43,7 @@ class NumeralsConversion {
     // END convertToNumerals
 
     // Converts a roman numeral string into the corresponding value in number format
-    public function convertFromNumerals() {
+    public function convertFromNumerals($conversionValue) {
 
     	// Holds the end total value after substring count
     	$iTotalValue = 0;
@@ -61,16 +52,16 @@ class NumeralsConversion {
     	// Loop each of the special numerals in the array
     	foreach ($this->aSpecialNumerals as $key => $value) {
 	    	// We want to find the special numerals first, start with CM. Add total occurences * value to the total
-	    	$iTotalValue += substr_count($this->conversionValue, $key) * $value;
+	    	$iTotalValue += substr_count($conversionValue, $key) * $value;
 	    	// Remove each occurrence of CM
-	    	$this->conversionValue = str_replace($key, '', $this->conversionValue);
+	    	$conversionValue = str_replace($key, '', $conversionValue);
     	}
     	// END loop  	 	 	
 
     	// Loop each of the numerals in the array
     	foreach ($this->aNumerals as $key => $value) {
     		// Add the number of times the value is found * by the value of that numeral to the total
-    		$iTotalValue += substr_count($this->conversionValue, $key) * $value;
+    		$iTotalValue += substr_count($conversionValue, $key) * $value;
     	}
     	// END loop
 
