@@ -53,7 +53,7 @@ module.exports = Backbone.View.extend({
         var elForm = this.$el.find('form');
 
         // Get the input value
-        var sValue   = elForm.find('input[name=ref]').val();
+        var value   = elForm.find('input[name=ref]').val();
 
         // Set bErrors to false initially. Set message and pattern variables. The pattern 
         // will match a string that has two sets of characters with a space delimitting them
@@ -63,15 +63,16 @@ module.exports = Backbone.View.extend({
             elError = this.$el.find('.errors');
 
         // If the value is empty
-        if (sValue === '') {
+        if (value === '') {
             // Set to true since there's an error
             bErrors = true;
             // Set the message
             sMessage = 'You have not entered anything!';
         // Now check to see if the value is not a number
-        } else if ( isNaN(sValue) ) {
+        } else if ( isNaN(value) ) {
             // Check to see we have two strings seperated by a space
-            if (!rPattern.test(sValue)) {
+            if (!rPattern.test(value)) {
+                // Set to true since there's an error
                 bErrors = true;
                 // Set the message
                 sMessage = 'You have not entered a correctly formatted roman numeral';
@@ -79,12 +80,20 @@ module.exports = Backbone.View.extend({
 
             // Since the value is a string, change the url            
             this.model.set('urlRoot', globals.api.convertToNumber);
+        // Otherwise we have a numerical value
+        } else {
+            // Check to see if the numerical value is within range
+            if ( value < 1 || value > 3999 ) {
+                // Set to true since there's an error
+                bErrors = true;
+                // Set the message
+                sMessage = 'The value must be between 1 and 3999';                
+            }
         }
         // END if
 
         // If there are any errors
         if (bErrors) {
-
             // Find the errors element and remove/add the classes to enable the styles and then set the HTML to the message string
             elError.removeClass('fadeOutDown').addClass("alert alert-danger animated fadeInUp").html(sMessage);
             // Prevent further execution.
@@ -96,17 +105,17 @@ module.exports = Backbone.View.extend({
         if (elError.hasClass('alert-danger')) elError.removeClass('fadeInUp').addClass("alert alert-danger animated fadeOutDown");
 
         // Call function to send data to server
-        this.getConvertedValue(sValue);
+        this.getConvertedValue(value);
     },
 
     // Calls server to get converted value
-    getConvertedValue: function (sValue) {
+    getConvertedValue: function (value) {
 
         // Set scope
         var $this = this;
 
         // Set the params
-        this.model.set('params', sValue);
+        this.model.set('params', value);
 
         // Make call to server
         this.model.fetch({
